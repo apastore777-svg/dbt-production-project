@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: raw
+    database: MY_DB
+    schema: RAW
+    tables:
+      - name: customers
+      - name: orders
+
+models:
+  - name: stg_customers
+    description: "Transformação da tabela customers"
+    columns:
+      - name: id
+        description: "ID do cliente"
+      - name: name
+        description: "Nome do cliente"
+      - name: email
+        description: "Email do cliente"
+

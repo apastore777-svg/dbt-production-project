@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Dimensão de clientes"
+    columns:
+      - name: id
+        description: "ID do cliente"
+      - name: name
+        description: "Nome do cliente"
+      - name: email
+        description: "Email do cliente"
+

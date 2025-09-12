@@ -1,0 +1,46 @@
+name: DBT CI/CD
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dbt:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install dbt-snowflake==1.10.2
+
+      - name: Run dbt debug
+        run: |
+          source venv/bin/activate
+          dbt debug --profiles-dir ./profiles
+
+      - name: Run dbt models
+        run: |
+          source venv/bin/activate
+          dbt run --profiles-dir ./profiles --target ${{ github.ref == 'refs/heads/main' && echo 'prod' || echo 'dev' }}
+
+      - name: Run dbt tests
+        run: |
+          source venv/bin/activate
+          dbt test --profiles-dir ./profiles --target ${{ github.ref == 'refs/heads/main' && echo 'prod' || echo 'dev' }}
+
