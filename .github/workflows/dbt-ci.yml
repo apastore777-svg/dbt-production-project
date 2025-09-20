@@ -1,6 +1,5 @@
 name: DBT CI/CD
 
-# Gatilhos: push ou PR para a branch main
 on:
   push:
     branches:
@@ -13,7 +12,7 @@ jobs:
   dbt:
     runs-on: ubuntu-latest
     steps:
-      # 1. Fazer checkout do repositório
+      # 1. Checkout do repositório
       - uses: actions/checkout@v3
 
       # 2. Configurar Python
@@ -42,7 +41,7 @@ jobs:
           SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
         run: |
           source venv/bin/activate
-          dbt debug --profiles-dir ./.dbt
+          dbt debug --profiles-dir ./.dbt --target ci
 
       # 5. Executar dbt commands
       - name: Run dbt
@@ -56,8 +55,8 @@ jobs:
           SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
         run: |
           source venv/bin/activate
-          dbt deps --profiles-dir ./.dbt
-          dbt compile --profiles-dir ./.dbt
-          dbt run --profiles-dir ./.dbt
-          dbt test --profiles-dir ./.dbt
+          dbt deps --profiles-dir ./.dbt --target ci
+          dbt compile --profiles-dir ./.dbt --target ci
+          dbt run --profiles-dir ./.dbt --target ci
+          dbt test --profiles-dir ./.dbt --target ci
 
